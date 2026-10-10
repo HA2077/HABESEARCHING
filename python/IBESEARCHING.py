@@ -1,12 +1,16 @@
+#!/usr/bin/env python3
 # HA ON DA CODE SO IT'S NOT RIGHT
 import time
 
-def LinearSearch(arr: list, target: int, low: int = 0, high: int = None, verbose: bool = False) -> int:
+
+def LinearSearch(
+    arr: list, target: int, low: int = 0, high: int | None = None, verbose: bool = False
+) -> int:
     "Normal Linear Search with optional logging and step benchmarking :)"
     t_start = time.perf_counter()
     if high is None:
         high = len(arr) - 1
-    
+
     if verbose:
         print(f"    [Linear Search] Scanning indices {low} to {high}...")
 
@@ -16,7 +20,7 @@ def LinearSearch(arr: list, target: int, low: int = 0, high: int = None, verbose
             if verbose:
                 print(f"    [Linear Search] Match found at index {i}! (Time: {t_elapsed:.2f} µs)")
             return i
-            
+
     t_elapsed = (time.perf_counter() - t_start) * 1_000_000
     if verbose:
         print(f"    [Linear Search] Target {target} not found in range [{low}, {high}]. (Time: {t_elapsed:.2f} µs)")
@@ -66,7 +70,9 @@ def HybridSearch(arr: list, target: int, verbose: bool = True) -> int:
             return mid
 
         # Path invariant check: prove array is unsorted
-        if (lo_val is not None and value < lo_val) or (hi_val is not None and value > hi_val):
+        if (lo_val is not None and value < lo_val) or (
+            hi_val is not None and value > hi_val
+        ):
             t_step_elapsed = (time.perf_counter() - t_step_start) * 1_000_000
             if verbose:
                 print(f"  🚨 PATH INVARIANT VIOLATION DETECTED! (Check Time: {t_step_elapsed:.2f} µs)")
@@ -79,7 +85,9 @@ def HybridSearch(arr: list, target: int, verbose: bool = True) -> int:
             idx = LinearSearch(arr, target, 0, n - 1, verbose=verbose)
             t_overall_elapsed = (time.perf_counter() - t_overall_start) * 1_000_000
             if verbose:
-                print(f"\n  ⏱️ TOTAL SEARCH RUNTIME: {t_overall_elapsed:.2f} µs ({t_overall_elapsed/1000:.4f} ms)")
+                print(
+                    f"\n  ⏱️ TOTAL SEARCH RUNTIME: {t_overall_elapsed:.2f} µs ({t_overall_elapsed/1000:.4f} ms)"
+                )
             return idx
 
         # Update bounds
@@ -91,7 +99,9 @@ def HybridSearch(arr: list, target: int, verbose: bool = True) -> int:
         else:
             t_step_elapsed = (time.perf_counter() - t_step_start) * 1_000_000
             if verbose:
-                print(f"  Value {value} > Target {target} -> Narrowing left. Updating hi_val = {value} (Step Time: {t_step_elapsed:.2f} µs)")
+                print(
+                    f"  Value {value} > Target {target} -> Narrowing left. Updating hi_val = {value} (Step Time: {t_step_elapsed:.2f} µs)"
+                )
             high, hi_val = mid - 1, value
 
         step += 1
@@ -161,7 +171,9 @@ def main():
 
         elif choice == "2":
             try:
-                raw_arr = input("\nEnter array (comma or space separated, e.g., 1, 2, 999, 4, 5...): ")
+                raw_arr = input(
+                    "Enter array (comma or space separated, e.g., 1, 2, 999, 4, 5...): "
+                )
                 arr = parse_user_array(raw_arr)
                 target = int(input("Enter target number: "))
 
@@ -194,8 +206,29 @@ def main():
             print(f"-> Result Index: {idx2}\n")
 
             # Case 3: Corrupted / Path Invariant Break
-            corrupted_arr = [1, 2, 999, 4, 5, 6, 7, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28]
-            print("\n=== [Case 3] Unsorted / Corrupted Array (Path Invariant Break) ===")
+            corrupted_arr = [
+                1,
+                2,
+                999,
+                4,
+                5,
+                6,
+                7,
+                8,
+                10,
+                12,
+                14,
+                16,
+                18,
+                20,
+                22,
+                24,
+                26,
+                28,
+            ]
+            print(
+                "\n=== [Case 3] Unsorted / Corrupted Array (Path Invariant Break) ==="
+            )
             idx3 = HybridSearch(corrupted_arr, 999, verbose=True)
             print(f"-> Result Index: {idx3}\n")
 
